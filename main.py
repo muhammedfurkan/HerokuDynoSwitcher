@@ -18,15 +18,14 @@ def changeDyno(api, name, islem=0):
 CONFIG_FILE_URL = str(os.environ.get('CONFIG_FILE_URL',""))
 print(f"\n[CHECK] HuzunluArtemis/HerokuDynoSwitcher")
 try:
-    if len(CONFIG_FILE_URL.strip()) == 0:
+    if not CONFIG_FILE_URL.strip():
         raise TypeError
     try:
         if os.path.isfile('dynos'): os.remove('dynos')
         res = requests.get(CONFIG_FILE_URL)
         if res.status_code == 200:
-            f = open('dynos', 'wb+')
-            f.write(res.content)
-            f.close()
+            with open('dynos', 'wb+') as f:
+                f.write(res.content)
         else:
             print(f"Failed to download config.env {res.status_code}")
     except Exception as e:
